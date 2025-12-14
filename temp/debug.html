@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Hidden Launcher — Live Debug</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { margin: 0; font: 14px system-ui, sans-serif; }
+    header { padding: 10px 12px; font-weight: 700; border-bottom: 1px solid #ccc; }
+    main { padding: 12px; }
+    .grid { display: grid; grid-template-columns: auto auto; gap: 6px 14px; }
+    .k { color: #888 }
+    .big { font-size: 18px; font-weight: 700; }
+    .err { color: #c33; white-space: pre-wrap; }
+    .row { display: contents; }
+  </style>
+</head>
+<body>
+  <header>Hidden Launcher — Live Debug</header>
+  <main>
+    <div class="grid" id="grid">
+      <div class="row"><div class="k">Blinks</div><div id="blinks" class="big">0</div></div>
+      <div class="row"><div class="k">Double</div><div id="dbl" class="big">0</div></div>
+      <div class="row"><div class="k">EAR</div><div id="ear">-</div></div>
+      <div class="row"><div class="k">MAR</div><div id="mar">-</div></div>
+      <div class="row"><div class="k">Yaw</div><div id="yaw">-</div></div>
+      <div class="row"><div class="k">Pitch</div><div id="pitch">-</div></div>
+      <div class="row"><div class="k">Roll</div><div id="roll">-</div></div>
+      <div class="row"><div class="k">Eye dist (px)</div><div id="eye">-</div></div>
+    </div>
+    <div id="err" class="err"></div>
+    <p style="margin-top:10px;color:#666">
+      Tips: Ctrl+B starts hidden capture and opens this window. Ctrl+Q stops it.
+    </p>
+  </main>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const port = chrome.runtime.connect({ name: "telemetry-consumer" });
+
+    function fmtDeg(x){ return (x==null||Number.isNaN(x))? "-" : (x*180/Math.PI).toFixed(0)+"°"; }
+    function fmt(x, d=3){ return (x==null||Number.isNaN(x))? "-" : Number(x).toFixed(d); }
+
+    port.onMessage.addListener((msg) => {
+      if (msg?.type !== "telemetry") return;
+      const d = msg.data || {};
+      if (d.fatal) { $("err").textContent = "FATAL: " + d.fatal; return; }
+      if (d.error) { $("err").textContent = "Error: " + d.error; }
+
+      $("blinks").textContent = d.blinkCount ?? "-";
+      $("dbl").textContent = d.doubleBlinkCount ?? "-";
+      $("ear").textContent = fmt(d.ear);
+      $("mar").textContent = fmt(d.mar);
+      $("yaw").textContent = fmtDeg(d.yaw);
+      $("pitch").textContent = fmtDeg(d.pitch);
+      $("roll").textContent = fmtDeg(d.roll);
+      $("eye").textContent = d.eyeDistancePx ?? "-";
+    });
+  </script>
+</body>
+</html>

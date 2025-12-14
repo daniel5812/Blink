@@ -1,0 +1,45 @@
+{
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self'; worker-src 'self';"
+  },
+  "manifest_version": 3,
+  "name": "Blink Detection",
+  "version": "0.1.0",
+  "description": "Face recognition with blink detection using MediaPipe.",
+  "permissions": ["windows", "offscreen", "system.display"],
+  "host_permissions": [
+    "https://storage.googleapis.com/*",
+    "https://cdn.jsdelivr.net/*",
+    "http://localhost/*",
+    "https://localhost/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "models/face_landmarker.task",
+        "vendor/wasm/*",
+        "hidden_launcher.html"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "action": { "default_title": "Open floating window" },
+  "background": { "service_worker": "background.js" },
+  "commands": {
+    "open-launcher": { 
+      "suggested_key": {
+        "default": "Ctrl+B"
+      },
+      "description": "Open Blink Detection Launcher"
+    },
+    "close-launcher": {
+      "suggested_key": {
+        "default": "Ctrl+Q" 
+      },
+      "description": "Stop hidden launcher"
+    }
+  }
+  
+
+
+}

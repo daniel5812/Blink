@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Blink Detection</title>
+  <style>
+    :root { --bg:#0b1020; --fg:#e9eefc; --muted:#9fb0d9; --card:#121a33; --accent:#9ad0ff }
+    * { box-sizing:border-box }
+    body { margin:0; width:400px; max-width:400px; background:var(--bg); color:var(--fg); font:14px system-ui }
+    header { display:flex; align-items:center; justify-content:space-between; padding:8px 10px; border-bottom:1px solid #263158 }
+    h1 { font-size:16px; margin:0 }
+    #video-wrap { position:relative; width:100%; aspect-ratio:4/3; background:#000; margin:8px; border-radius:10px }
+    #video, #overlay { position:absolute; inset:0; width:100%; height:100%; border-radius:10px }
+    #video { transform: scaleX(-1); } /* Mirror the video */
+    #stats { display:grid; grid-template-columns:auto 1fr; gap:6px 10px; padding:10px; background:var(--card); margin:8px; border-radius:12px }
+    .stat { display:contents }
+    .k { color:var(--muted) }
+    .row { display:flex; justify-content:space-between; align-items:center; margin:6px 0; padding:4px 0 }
+    #open { background:var(--accent); border:0; color:#021024; padding:6px 10px; border-radius:10px; font-weight:700; cursor:pointer; margin:8px }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Blink Detection</h1>
+  </header>
+
+  <section id="video-wrap">
+    <video id="video" playsinline autoplay muted></video>
+    <canvas id="overlay"></canvas>
+  </section>
+
+  <div id="stats" style="padding:8px 10px;font:13px system-ui;color:#e9eefc">
+    <div class="row"><span>Head Tilt (Sideways)</span><span id="roll">0°</span></div>
+    <div class="row"><span>Head Turn (Left/Right)</span><span id="yaw">0°</span></div>
+    <div class="row"><span>Head Nod (Up/Down)</span><span id="pitch">0°</span></div>
+    <div class="row"><span>Eye Openness</span><span id="ear">-</span></div>
+    <div class="row"><span>Mouth Openness</span><span id="mar">-</span></div>
+  </div>
+
+  <div id="blink-counter" style="padding:8px 10px;font:13px system-ui;color:#e9eefc;background:var(--card);margin:8px;border-radius:12px;text-align:center;">
+    <div style="font-size:18px;font-weight:bold;color:var(--accent);">Blinks: <span id="blink-count">0</span></div>
+    <div style="font-size:16px;font-weight:bold;color:#ff6b6b;margin-top:4px;">Double Blinks: <span id="double-blink-count">0</span></div>
+    <div style="font-size:14px;margin-top:4px;color:var(--muted);">Eye Distance: <span id="eye-distance">-</span> px</div>
+    <div style="font-size:14px;margin-top:4px;color:var(--accent);">1/Eyes: <span id="eye-inverse">-</span></div>
+    <div style="font-size:14px;margin-top:4px;color:var(--accent);">Distance: <span id="camera-distance">-</span> cm</div>
+    <div style="font-size:14px;margin-top:4px;color:#ffeb3b;font-weight:bold;">Pitch Debug: <span id="pitch-debug">-</span></div>
+  </div>
+
+  <button id="open">Open Floating Window</button>
+
+  <script type="module" src="launcher.js"></script>
+</body>
+</html>
