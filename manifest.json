@@ -22,13 +22,13 @@
   ],
 
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "platform/chrome/background.js"
   },
 
   "content_scripts": [
     {
       "matches": ["<all_urls>"],  
-      "js": ["content.js"]         
+      "js": ["platform/chrome/content.js"]         
     }
   ],
 
